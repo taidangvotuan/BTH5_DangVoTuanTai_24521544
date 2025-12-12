@@ -32,7 +32,6 @@ namespace Bai11
             drawingGraphics.Clear(Color.White);
 
             // Register events
-            buttonColor.Click += buttonColor_Click;
             panel1.MouseDown += Panel1_MouseDown;
             panel1.MouseMove += Panel1_MouseMove;
             panel1.MouseUp += Panel1_MouseUp;
