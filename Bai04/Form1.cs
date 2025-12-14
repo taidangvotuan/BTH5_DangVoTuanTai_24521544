@@ -16,10 +16,8 @@ namespace Bai04
             InitializeFontSizes();
             RegisterEvents(); // Đăng ký tất cả sự kiện
 
-            // Khởi tạo màu button
             buttonColor.BackColor = currentColor;
 
-            // Chọn mặc định Center
             radioButtonCenter.Checked = true;
 
             UpdateTextFormat();
@@ -54,19 +52,15 @@ namespace Bai04
                 comboBoxSize.SelectedIndex = 4;
         }
 
-        // QUAN TRỌNG: Đăng ký tất cả sự kiện
         private void RegisterEvents()
         {
-            // Sự kiện cho ComboBox
             comboBoxFont.SelectedIndexChanged += UpdateFormat_Changed;
             comboBoxSize.SelectedIndexChanged += UpdateFormat_Changed;
 
-            // Sự kiện cho CheckBox
             checkBoxBold.CheckedChanged += UpdateFormat_Changed;
             checkBoxItalic.CheckedChanged += UpdateFormat_Changed;
             checkBoxUnderline.CheckedChanged += UpdateFormat_Changed;
 
-            // Sự kiện cho RadioButton
             radioButtonLeft.CheckedChanged += UpdateFormat_Changed;
             radioButtonCenter.CheckedChanged += UpdateFormat_Changed;
             radioButtonRight.CheckedChanged += UpdateFormat_Changed;
@@ -102,17 +96,14 @@ namespace Bai04
                 string fontName = comboBoxFont.SelectedItem.ToString();
                 float fontSize = Convert.ToSingle(comboBoxSize.SelectedItem);
 
-                // Tạo FontStyle
                 FontStyle style = FontStyle.Regular;
                 if (checkBoxBold.Checked) style |= FontStyle.Bold;
                 if (checkBoxItalic.Checked) style |= FontStyle.Italic;
                 if (checkBoxUnderline.Checked) style |= FontStyle.Underline;
 
-                // Áp dụng Font và màu
                 richTextBoxPreview.Font = new Font(fontName, fontSize, style);
                 richTextBoxPreview.ForeColor = currentColor;
 
-                // Áp dụng căn lề
                 if (radioButtonLeft.Checked)
                     richTextBoxPreview.SelectionAlignment = HorizontalAlignment.Left;
                 else if (radioButtonCenter.Checked)

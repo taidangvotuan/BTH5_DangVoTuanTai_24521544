@@ -24,7 +24,6 @@ namespace Bai06
 
         private void listBoxFonts_MeasureItem(object sender, MeasureItemEventArgs e)
         {
-            // Set height for each item
             e.ItemHeight = 36;
         }
 
@@ -36,10 +35,8 @@ namespace Bai06
 
             try
             {
-                // Create font with the font family itself
                 using (Font font = new Font(fontName, 14, FontStyle.Regular))
                 {
-                    // Draw the font name using that font
                     Brush brush = (e.State & DrawItemState.Selected) == DrawItemState.Selected
                         ? SystemBrushes.HighlightText
                         : SystemBrushes.WindowText;
@@ -49,7 +46,6 @@ namespace Bai06
             }
             catch
             {
-                // If font can't be created, use default font
                 using (Font defaultFont = new Font("Arial", 12, FontStyle.Regular))
                 {
                     Brush brush = (e.State & DrawItemState.Selected) == DrawItemState.Selected

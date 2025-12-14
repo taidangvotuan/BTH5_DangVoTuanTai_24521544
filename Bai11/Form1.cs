@@ -7,10 +7,19 @@ namespace Bai11
 {
     public partial class Form1 : Form
     {
+        // Màu vẽ hiện tại
         private Color selectedColor = Color.Black;
+
+        // Điểm bắt đầu và kết thúc khi kéo chuột
         private Point startPoint, endPoint;
+
+        // Cờ kiểm tra đang vẽ hay không
         private bool isDrawing = false;
+
+        // Bitmap dùng để lưu các hình đã vẽ (vẽ vĩnh viễn)
         private Bitmap drawingBitmap;
+
+        // Graphics vẽ trực tiếp lên bitmap
         private Graphics drawingGraphics;
 
         public Form1()
@@ -20,18 +29,20 @@ namespace Bai11
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            // Initialize default values
+            // Giá trị mặc định
             radioButtonLine.Checked = true;
             radioButtonSolidBrush.Checked = true;
             textBoxWidth.Text = "3";
 
-            // Initialize bitmap for drawing
+            // Khởi tạo bitmap bằng kích thước panel
             drawingBitmap = new Bitmap(panel1.Width, panel1.Height);
+
+            // Tạo Graphics từ bitmap
             drawingGraphics = Graphics.FromImage(drawingBitmap);
             drawingGraphics.SmoothingMode = SmoothingMode.AntiAlias;
             drawingGraphics.Clear(Color.White);
 
-            // Register events
+            // Đăng ký các sự kiện chuột & vẽ
             panel1.MouseDown += Panel1_MouseDown;
             panel1.MouseMove += Panel1_MouseMove;
             panel1.MouseUp += Panel1_MouseUp;
@@ -44,9 +55,7 @@ namespace Bai11
             {
                 colorDialog.Color = selectedColor;
                 if (colorDialog.ShowDialog() == DialogResult.OK)
-                {
                     selectedColor = colorDialog.Color;
-                }
             }
         }
 
@@ -65,7 +74,7 @@ namespace Bai11
             if (isDrawing)
             {
                 endPoint = e.Location;
-                panel1.Invalidate(); // Redraw to show preview
+                panel1.Invalidate(); // Vẽ lại để preview
             }
         }
 
@@ -76,7 +85,7 @@ namespace Bai11
                 isDrawing = false;
                 endPoint = e.Location;
 
-                // Draw on the bitmap permanently
+                // Vẽ vĩnh viễn lên bitmap
                 DrawShape(drawingGraphics, startPoint, endPoint, false);
 
                 panel1.Invalidate();
@@ -85,10 +94,10 @@ namespace Bai11
 
         private void Panel1_Paint(object sender, PaintEventArgs e)
         {
-            // Draw the bitmap with all previous drawings
+            // Vẽ toàn bộ bitmap (các hình đã vẽ)
             e.Graphics.DrawImage(drawingBitmap, 0, 0);
 
-            // Draw current shape preview while dragging
+            // Vẽ preview khi đang kéo chuột
             if (isDrawing)
             {
                 e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
@@ -98,13 +107,15 @@ namespace Bai11
 
         private void DrawShape(Graphics g, Point start, Point end, bool isPreview)
         {
+            // Lấy độ dày nét
             float width = 3;
             if (!float.TryParse(textBoxWidth.Text, out width))
                 width = 3;
 
+            // Tính hình chữ nhật bao
             Rectangle rect = GetRectangle(start, end);
 
-            // For Line shape
+            // Vẽ Line
             if (radioButtonLine.Checked)
             {
                 using (Pen pen = new Pen(selectedColor, width))
@@ -114,12 +125,11 @@ namespace Bai11
                 return;
             }
 
-            // For Rectangle and Ellipse - need brush
+            // =Rectangle & Ellipse cần Brush
             Brush brush = GetSelectedBrush(rect);
 
             if (brush != null)
             {
-                // Fill the shape
                 if (radioButtonRectangle.Checked)
                     g.FillRectangle(brush, rect);
                 else if (radioButtonElipse.Checked)
@@ -128,7 +138,7 @@ namespace Bai11
                 brush.Dispose();
             }
 
-            // Draw outline
+            // ===== Vẽ viền =====
             using (Pen pen = new Pen(selectedColor, width))
             {
                 if (radioButtonRectangle.Checked)
@@ -140,17 +150,22 @@ namespace Bai11
 
         private Brush GetSelectedBrush(Rectangle rect)
         {
-            // Ensure rectangle has valid size
+            // Kiểm tra kích thước hợp lệ
             if (rect.Width <= 0 || rect.Height <= 0)
                 return new SolidBrush(Color.Green);
 
             if (radioButtonSolidBrush.Checked)
                 return new SolidBrush(Color.Green);
+
             else if (radioButtonHatchBrush.Checked)
-                return new HatchBrush(HatchStyle.Horizontal, Color.Blue, Color.Green);
+                return new HatchBrush(
+                    HatchStyle.Horizontal,
+                    Color.Blue,
+                    Color.Green);
+
             else if (radioButtonTextureBrush.Checked)
             {
-                // Create a simple texture pattern
+                // Tạo texture bitmap
                 Bitmap texture = new Bitmap(20, 20);
                 using (Graphics gTex = Graphics.FromImage(texture))
                 {
@@ -161,20 +176,17 @@ namespace Bai11
                 }
                 return new TextureBrush(texture);
             }
+
             else if (radioButtonLinearGradientBrush.Checked)
             {
-                // Ensure rectangle is large enough for gradient
                 if (rect.Width > 1 && rect.Height > 1)
                 {
                     return new LinearGradientBrush(
                         rect,
                         Color.Red,
                         Color.Green,
-                        LinearGradientMode.Vertical
-                    );
+                        LinearGradientMode.Vertical);
                 }
-                else
-                    return new SolidBrush(Color.Green);
             }
 
             return new SolidBrush(Color.Green);
