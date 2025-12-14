@@ -7,13 +7,8 @@ namespace Bai11
 {
     public partial class Form1 : Form
     {
-        // Màu vẽ hiện tại
         private Color selectedColor = Color.Black;
-
-        // Điểm bắt đầu và kết thúc khi kéo chuột
         private Point startPoint, endPoint;
-
-        // Cờ kiểm tra đang vẽ hay không
         private bool isDrawing = false;
 
         // Bitmap dùng để lưu các hình đã vẽ (vẽ vĩnh viễn)
@@ -125,7 +120,7 @@ namespace Bai11
                 return;
             }
 
-            // =Rectangle & Ellipse cần Brush
+            // Rectangle & Ellipse cần Brush
             Brush brush = GetSelectedBrush(rect);
 
             if (brush != null)
@@ -138,7 +133,7 @@ namespace Bai11
                 brush.Dispose();
             }
 
-            // ===== Vẽ viền =====
+            // Vẽ viền
             using (Pen pen = new Pen(selectedColor, width))
             {
                 if (radioButtonRectangle.Checked)
